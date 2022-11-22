@@ -124,7 +124,6 @@ def trash_sort(path):
     path_documents = Path(clean_folder + "\\documents")
     path_images = Path(clean_folder + "\\images")
     path_video = Path(clean_folder + "\\video")
-    path_unknown_files = Path(clean_folder + "\\unknown_files")
 
     
     path_archive.mkdir(exist_ok=True)
@@ -132,7 +131,6 @@ def trash_sort(path):
     path_documents.mkdir(exist_ok=True)
     path_images.mkdir(exist_ok=True)
     path_video.mkdir(exist_ok=True)
-    path_unknown_files.mkdir(exist_ok=True)
 
 
     trash_dir = Path(path)
@@ -178,13 +176,13 @@ def trash_sort(path):
                 ext_set.add(file_ext.upper())
                 archives_list.append(file_name)
                 shutil.unpack_archive(elem, str(path_archive) + "\\"+ file_name.removesuffix(elem.suffix))
-                new_dir = Path(str(path_archive) + f"\{file_name}")
+                new_dir = Path(str(trash_dir) + f"\{file_name}")
                 shutil.move(elem, new_dir)
 
             else:
 
                 unknown_ext_set.add(file_ext.upper())
-                new_dir = Path(str(path_unknown_files) + f"\{file_name}")
+                new_dir = Path(str(trash_dir) + f"\{file_name}")
                 shutil.move(elem, new_dir)
 
 
