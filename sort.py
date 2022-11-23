@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+import os
+
 #for unpacking archives and moving the files
 
 import shutil
@@ -119,11 +121,12 @@ def trash_sort(path):
 
     global clean_folder
     
-    path_archive = Path(clean_folder + "\\archives")
-    path_audio = Path(clean_folder + "\\audio")
-    path_documents = Path(clean_folder + "\\documents")
-    path_images = Path(clean_folder + "\\images")
-    path_video = Path(clean_folder + "\\video")
+    path_archive = Path(os.path.join(clean_folder, "archives"))
+    path_audio = Path(os.path.join(clean_folder, "audio"))
+    path_documents = Path(os.path.join(clean_folder, "documents"))
+    path_images = Path(os.path.join(clean_folder, "images"))
+    path_video = Path(os.path.join(clean_folder, "video"))
+    path_unknown_files = Path(os.path.join(clean_folder, "unknown_files"))
 
     
     path_archive.mkdir(exist_ok=True)
@@ -131,6 +134,7 @@ def trash_sort(path):
     path_documents.mkdir(exist_ok=True)
     path_images.mkdir(exist_ok=True)
     path_video.mkdir(exist_ok=True)
+    path_unknown_files.mkdir(exist_ok=True)
 
 
     trash_dir = Path(path)
@@ -147,42 +151,42 @@ def trash_sort(path):
 
                 ext_set.add(file_ext.upper())
                 pictures_list.append(file_name)
-                new_dir = Path(str(path_images) + f"\{file_name}")
+                new_dir = Path(os.path.join(str(path_images), file_name))
                 shutil.move(elem, new_dir)
 
             elif file_ext.upper() in [".AVI", ".MP4", ".MOV", ".MKV"]:
 
                 ext_set.add(file_ext.upper())
                 videos_list.append(file_name)
-                new_dir = Path(str(path_video) + f"\{file_name}")
+                new_dir = Path(os.path.join(str(path_video), file_name))
                 shutil.move(elem, new_dir)
 
             elif file_ext.upper() in [".DOC", ".DOCX", ".TXT", ".PDF", ".XLSX", ".PPTX"]:
 
                 ext_set.add(file_ext.upper())
                 docs_list.append(file_name)
-                new_dir = Path(str(path_documents) + f"\{file_name}")
+                new_dir = Path(os.path.join(str(path_documents), file_name))
                 shutil.move(elem, new_dir)
 
             elif file_ext.upper() in [".MP3", ".OGG", ".WAV", ".AMR"]:
 
                 ext_set.add(file_ext.upper())
                 music_list.append(file_name)
-                new_dir = Path(str(path_audio) + f"\{file_name}")
+                new_dir = Path(os.path.join(str(path_audio), file_name))
                 shutil.move(elem, new_dir)
 
             elif file_ext.upper() in [".ZIP", ".GZ", ".TAR"]:
 
                 ext_set.add(file_ext.upper())
                 archives_list.append(file_name)
-                shutil.unpack_archive(elem, str(path_archive) + "\\"+ file_name.removesuffix(elem.suffix))
-                new_dir = Path(str(trash_dir) + f"\{file_name}")
+                shutil.unpack_archive(elem, os.path.join(str(path_archive), file_name.removesuffix(elem.suffix)))
+                new_dir = Path(os.path.join(str(path_archive), file_name))
                 shutil.move(elem, new_dir)
 
             else:
 
                 unknown_ext_set.add(file_ext.upper())
-                new_dir = Path(str(trash_dir) + f"\{file_name}")
+                new_dir = Path(os.path.join(str(path_unknown_files), file_name))
                 shutil.move(elem, new_dir)
 
 
@@ -193,12 +197,12 @@ def trash_sort(path):
             
             try:
                 
-                new_dir = Path(f"{elem.parent}\{folder_name}")
+                new_dir = Path(os.path.join(elem.parent, folder_name))
                 full_folder_name = elem.rename(new_dir)
 
             except FileExistsError:
 
-                new_dir = Path(f"{elem.parent}\{folder_name}_1")
+                new_dir = Path(os.path.join(elem.parent, folder_name+"1"))
                 full_folder_name = elem.rename(new_dir)
                 trash_sort(full_folder_name)
 
